@@ -125,6 +125,12 @@ autocrop::arguments (const context& ctx)
   argv += (trim_ ? " trim" : " crop");
   argv += " " + lexical_cast< string > (ctx.octets_per_image ()
                                         + PNM_HEADER_SIZE);
+
+  // Resetting the locales may mess up the rest. For now, to fix the problem,
+  // just replace all commas with dots in case lexical_cast converts it wrong
+  // (e.g. with German locale)
+  std::replace(argv.begin(), argv.end(), ',', '.');
+
   argv += " -";
   argv += " pnm:-";
 
